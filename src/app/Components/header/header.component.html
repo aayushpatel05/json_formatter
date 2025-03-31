@@ -1,0 +1,44 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="infinnium_white.svg" alt="logo" class="logo" />
+  </div>
+  <!-- Desktop Menu -->
+  <div class="main-style desktop-menu">
+    <div>
+      <a routerLink="/jsonFormtter" routerLinkActive="active-link">
+        JSONFormatter
+      </a>
+    </div>
+    <div>
+      <a routerLink="/sqlFormtter" routerLinkActive="active-link">
+        SQLFormatter
+      </a>
+    </div>
+    <div class="">
+      <a routerLink="/login" routerLinkActive="active-link" (click)="toggleMenu()">
+        Login
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <!-- <div class="mobile-menu">
+    <div class="menu-icon" (click)="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="dropdown-menu" [class.show]="isMenuOpen">
+      <a routerLink="/jsonFormtter" routerLinkActive="active-link" (click)="toggleMenu()">
+        JSONFormtter
+      </a>
+      <a routerLink="/sqlFormtter" routerLinkActive="active-link" (click)="toggleMenu()">
+        SQLFormtter
+      </a>
+      <a routerLink="/xlogin" routerLinkActive="active-link" (click)="toggleMenu()">
+        Login
+      </a>
+    </div>
+  </div> -->
+
+</header>

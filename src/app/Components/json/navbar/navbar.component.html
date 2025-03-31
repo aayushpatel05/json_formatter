@@ -1,0 +1,53 @@
+<header class="header">
+  <div class="logo-container">
+    <img src="infinnium_white.svg" alt="logo" class="logo" />
+  </div>
+
+  <!-- Desktop Menu -->
+  <div class="main-style desktop-menu">
+    <!-- User Dropdown -->
+    <div class="user-dropdown" *ngIf="isLoggedIn">
+      <div class="user-info" (click)="toggleDropdown()">
+        <span>{{ userName }}</span>
+        
+        <span class="dropdown-icon">▼</span>
+      </div>
+      <div class="dropdown-menu" [class.show]="isDropdownOpen">
+        <a (click)="logout()">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <!-- <div class="mobile-menu">
+      <div class="menu-icon" (click)="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="dropdown-menu" [class.show]="isMenuOpen">
+        <a routerLink="/jsonFormtter" routerLinkActive="active-link" (click)="toggleMenu()">
+          JSONFormtter
+        </a>
+        <a routerLink="/sqlFormtter" routerLinkActive="active-link" (click)="toggleMenu()">
+          SQLFormtter
+        </a>
+        <a routerLink="/xlogin" routerLinkActive="active-link" (click)="toggleMenu()">
+          Login
+        </a>
+      </div>
+    </div> -->
+
+</header>
+
+
+<!-- <div>
+        <a routerLink="/JsonFormtter" routerLinkActive="active-link">
+          JSONFormatter
+        </a>
+      </div>
+      <div>
+        <a routerLink="/SqlFormtter" routerLinkActive="active-link">
+          SQLFormatter
+        </a>
+      </div> -->

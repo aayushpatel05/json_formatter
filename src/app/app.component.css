@@ -1,0 +1,6 @@
+/* styles.css */
+.container {
+    height: 100vh; /* Equivalent to Tailwind's h-screen */
+    width: 100%;   /* Equivalent to Tailwind's w-full */
+    /* background-color: aqua; */
+  }

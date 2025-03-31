@@ -1,0 +1,115 @@
+<app-header></app-header>
+<div class="main">
+  <!-- leftbox -->
+  <div class="left-box">
+    <!-- headerbar-left -->
+    <span class="header-bar">
+      <!-- left-div -->
+      <span class="div1">
+        <div class="group" (click)="onIcon1Json()">
+          <fa-icon icon="bars-staggered"></fa-icon>
+          <span class="toolkit">FormatData</span>
+        </div>
+        <div class="group" (click)="onIcon2Json()">
+          <fa-icon icon="bars"></fa-icon>
+          <span class="toolkit">CompactJson</span>
+        </div>
+      </span>
+
+      <!-- right-div -->
+      <span class="div2">
+        <span (click)="onSampleData()" class="sample mainstyel">Sample</span>
+        <input type="file" #fileInput (change)="onFileSelect($event)" style="display: none" accept=".json" multiple />
+        <div class="group" (click)="fileInput.click()">
+          <fa-icon icon="folder"></fa-icon>
+          <span class="toolkit">OpenFile</span>
+        </div>
+        <div class="group" (click)="copyClipboard(inputValue)">
+          <fa-icon icon="copy"></fa-icon>
+          <span class="toolkit">Copy</span>
+        </div>
+        <div class="group" (click)="clearContent('input')">
+          <fa-icon icon="trash"></fa-icon>
+          <span class="toolkit">Delete</span>
+        </div>
+        <div class="group" (click)="toggleFullScreen('left')">
+          <fa-icon icon="expand"></fa-icon>
+          <span class="toolkit fullscreen-tooltip">FullScreen</span>
+        </div>
+      </span>
+    </span>
+
+    <!-- left Editor Container -->
+    <div #editorContainer class="editor-container mainstyel"></div>
+  </div>
+
+  <!-- middle box -->
+  <div class="middle-box">
+    <button class="middle-button" (click)="onConvertJson()">
+      Format / Beautifier
+    </button>
+    <button class="middle-button" (click)="OnConvertMinify()">
+      Minify / Compact
+    </button>
+    <button class="middle-button" (click)="onEncoded()">Encode</button>
+    <button class="middle-button" (click)="onDecodeAndFormat()">Decode</button>
+  </div>
+
+  <!-- rightbox -->
+  <div class="right-box">
+    <span class="header-bar">
+      <span class="div1">
+        <div class="group tooltip-container" (click)="onIcon3Json()">
+          <fa-icon icon="bars-staggered"></fa-icon>
+          <span class="toolkit">FormatData</span>
+        </div>
+        <div class="group" (click)="onIcon4Json()">
+          <fa-icon icon="bars"></fa-icon>
+          <span class="toolkit">CompactJson</span>
+        </div>
+        <div class="group" (click)="onIcon5Json()">
+          <fa-icon icon="arrow-left"></fa-icon>
+          <span class="toolkit">CompactJson</span>
+        </div>
+      </span>
+      <div class="search-container">
+        <input type="text" class="search-input" [(ngModel)]="searchQuery" placeholder="Search..."
+          (input)="onSearch()" />
+        <div class="search-controls">
+          <button class="search-button" (click)="navigateSearch(false)" [disabled]="searchResults.length === 0">
+            <fa-icon [icon]="'chevron-up'"></fa-icon>
+          </button>
+          <div class="search-count">
+            {{ searchResults.length > 0 ? currentSearchIndex + 1 : 0 }}/{{
+            searchResults.length
+            }}
+          </div>
+          <button class="search-button" (click)="navigateSearch(true)" [disabled]="searchResults.length === 0">
+            <fa-icon [icon]="'chevron-down'"></fa-icon>
+          </button>
+        </div>
+      </div>
+      <span class="div2">
+        <div class="group" (click)="downloadContent()">
+          <fa-icon icon="download"></fa-icon>
+          <span class="toolkit">Download</span>
+        </div>
+        <div class="group" (click)="copyClipboard(outputValue)">
+          <fa-icon icon="copy"></fa-icon>
+          <span class="toolkit">Copy</span>
+        </div>
+        <div class="group" (click)="clearContent('output')">
+          <fa-icon icon="trash"></fa-icon>
+          <span class="toolkit">Delete</span>
+        </div>
+        <div class="group" (click)="toggleFullScreen('right')">
+          <fa-icon icon="expand"></fa-icon>
+          <span class="toolkit fullscreen-tooltip">FullScreen</span>
+        </div>
+      </span>
+    </span>
+    <div class="output-container">
+      <div #outputEditorContainer class="editor-container mainstyel"></div>
+    </div>
+  </div>
+</div>
