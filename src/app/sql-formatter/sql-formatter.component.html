@@ -1,0 +1,102 @@
+<div class="main">
+  <!-- leftbox -->
+  <div class="left-box" #leftBox>
+    <!-- headerbar-left -->
+    <span class="header-bar">
+      <!-- left-div -->
+      <span class="div1">
+        <div class="group relative">
+          <fa-icon icon="bars-staggered"></fa-icon>
+          <span class="toolkit">FormatData</span>
+        </div>
+        <div class="group relative">
+          <fa-icon icon="bars"></fa-icon>
+          <span class="toolkit">CompactJson</span>
+        </div>
+      </span>
+
+      <!-- right-div -->
+      <span class="div2">
+        <span (click)="onSampleData()" class="sample mainstyel">Sample</span>
+        <input
+          type="file"
+          #fileInput
+          (change)="onFileSelect($event)"
+          style="display: none"
+          accept=".sql"
+          multiple
+        />
+        <div class="group relative" (click)="fileInput.click()">
+          <fa-icon icon="folder"></fa-icon>
+          <span class="toolkit">OpenFile</span>
+        </div>
+        <div class="group relative" (click)="copyClipboard('input')">
+          <fa-icon icon="copy"></fa-icon>
+          <span class="toolkit">Copy</span>
+        </div>
+        <div class="group relative" (click)="clearContent('input')">
+          <fa-icon icon="trash"></fa-icon>
+          <span class="toolkit">Delete</span>
+        </div>
+        <div class="group relative" (click)="toggleFullScreen('left')">
+          <fa-icon icon="expand"></fa-icon>
+          <span class="toolkit fullscreen-tooltip">FullScreen</span>
+        </div>
+      </span>
+    </span>
+
+    <!-- left TextArea -->
+
+    <div #editor class="editor" style="height: 95%; width: 100%"></div>
+  </div>
+
+  <!-- middle box -->
+  <div class="middle-box">
+    <button class="middle-button" (click)="onSqlConvert()">Beautify</button>
+  </div>
+
+  <!-- rightbox -->
+  <div class="right-box" #rightBox>
+    <!-- rightbox headerbar -->
+    <span class="header-bar">
+      <!-- left-div -->
+      <span class="div1">
+        <div class="group relative">
+          <fa-icon icon="bars-staggered"></fa-icon>
+          <span class="toolkit">FormatData</span>
+        </div>
+        <div class="group relative">
+          <fa-icon icon="bars"></fa-icon>
+          <span class="toolkit">CompactJson</span>
+        </div>
+      </span>
+
+      <span class="div2">
+        <div class="group relative" (click)="downloadContent()">
+          <fa-icon icon="download"></fa-icon>
+          <span class="toolkit">Download</span>
+        </div>
+        <div class="group relative" (click)="copyClipboard('output')">
+          <fa-icon icon="copy"></fa-icon>
+          <span class="toolkit">Copy</span>
+        </div>
+        <div class="group relative" (click)="clearContent('output')">
+          <fa-icon icon="trash"></fa-icon>
+          <span class="toolkit">Delete</span>
+        </div>
+        <div class="group relative" (click)="toggleFullScreen('right')">
+          <fa-icon icon="expand"></fa-icon>
+          <span class="toolkit fullscreen-tooltip">FullScreen</span>
+        </div>
+      </span>
+    </span>
+
+    <!-- rightbox textarea -->
+    <div #outputEditor  class="editor" style="height: 95%; width: 100%" ></div>
+    <!-- <div class="output-container">
+      <pre
+        class="sql-output"
+      ><code class="hljs sql" [innerHTML]="formattedOutput"></code></pre>
+    </div> -->
+  </div>
+</div>
