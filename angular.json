@@ -23,6 +23,7 @@
               "ace-builds/src-noconflict/mode-sql",
               "ace-builds/src-noconflict/theme-sqlserver",
               "crypto-js"
+              
             ],
             "outputPath": "dist/json-formatter",
             "index": "src/index.html",
