@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
   
 })
 export class LoginComponent {
+ 
   loginForm!: FormGroup;
   showPassword: boolean = false;
   loginError: string | null = null;
@@ -48,7 +49,8 @@ export class LoginComponent {
     try {
       const validUser = await this.authService.loginValidation(this.loginForm.value);
       if (validUser) {
-        this.router.navigate(['/JSON']);
+        this.router.navigate(['/jsonFormtter']);
+        //this.router.navigateByUrl('/JSON', { replaceUrl: true });
 
       } else {
         this.loginError = 'Invalid username or password';
@@ -66,5 +68,4 @@ export class LoginComponent {
   get password() {
     return this.loginForm.get('password');
   }
-
 }

@@ -30,6 +30,7 @@ import {
 import sqlFormatter from '@sqltools/formatter';
 import { SqlFormatterService } from '../../Services/sql-formatter.service';
 import { HeaderComponent } from "../header/header.component";
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-sql-formatter',
@@ -38,7 +39,24 @@ import { HeaderComponent } from "../header/header.component";
   styleUrl: './sql-formatter.component.css',
 })
 export class SqlFormatterComponent implements OnDestroy, AfterViewInit {
-  constructor(library: FaIconLibrary, private sanitizer: DomSanitizer, private sqlFormatterService: SqlFormatterService ) {
+ 
+  private outputAceEditor: any;
+  private inputAceEditor: any;
+  private inputChanges = new Subject<void>();
+
+  inputValue: string = '';
+  outputValue: string = '';
+
+
+  searchQuery: string = '';
+  searchResults: number[] = [];
+  currentSearchIndex: number = -1;
+  isLeftFullscreen: boolean = false;
+  isRightFullscreen: boolean = false;
+  uppercaseKeywords: boolean = true;
+
+
+  constructor(library: FaIconLibrary,  private sqlFormatterService: SqlFormatterService) {
     library.addIcons(
       faDownload,
       faExpand,
@@ -53,29 +71,23 @@ export class SqlFormatterComponent implements OnDestroy, AfterViewInit {
   // For Full Screen Mode
   @ViewChild('leftBox') leftBox!: ElementRef;
   @ViewChild('rightBox') rightBox!: ElementRef;
-
   @ViewChild('editor') private editor!: ElementRef<HTMLElement>;
   @ViewChild('outputEditor') private outputEditor!: ElementRef<HTMLElement>;
-
-  inputValue: string = '';
-  outputValue: string = '';
-  formattedOutput: SafeHtml | string = '';
-
-  tabSize: number = 2;
-  searchQuery: string = '';
-  searchResults: number[] = [];
-  currentSearchIndex: number = -1;
-  isLeftFullscreen: boolean = false;
-  isRightFullscreen: boolean = false;
-  uppercaseKeywords: boolean = true;
-  private outputAceEditor: any;
-  private inputAceEditor: any;
-
 
 
   ngAfterViewInit() {
     this.initializeInputEditor();
     this.initializeOutputEditor();
+
+    // Format any existing content on init
+    if (this.inputValue) {
+      this.onSqlConvert();
+    }
+
+    // Setup debounced input (if using)
+    this.inputChanges.pipe(debounceTime(300)).subscribe(() => {
+      this.onSqlConvert();
+    });
   }
   ngOnDestroy() {
     if (this.inputAceEditor) {
@@ -101,6 +113,7 @@ export class SqlFormatterComponent implements OnDestroy, AfterViewInit {
     // Sync inputValue with editor content
     this.inputAceEditor.on('change', () => {
       this.inputValue = this.inputAceEditor.getValue();
+      this.inputChanges.next();
     });
   }
   private initializeOutputEditor() {
@@ -120,64 +133,67 @@ export class SqlFormatterComponent implements OnDestroy, AfterViewInit {
       this.outputValue = this.outputAceEditor.getValue();
     });
   }
+ 
+  tabWidth: number = 5;
+  useTabs: boolean = false;
+  keywordCase: 'preserve' | 'upper' | 'lower' = 'preserve';
+  dataTypeCase: 'preserve' | 'upper' | 'lower' = 'preserve';
+  functionCase: 'preserve' | 'upper' | 'lower' = 'preserve';
+  identifierCase: 'preserve' | 'upper' | 'lower' = 'preserve';
+  indentStyle: 'standard' | 'tabularLeft' | 'tabularRight' = 'standard';
+  expressionWidth: number = 50;
+  linesBetweenQueries: number = 1;
 
   onSqlConvert() {
+    //main
     const sqlInput = this.inputValue.trim();
     if (!sqlInput) {
-      this.formattedOutput = 'Input is empty';
-      this.outputValue = '';
-      console.log('No input provided');
+      this.outputAceEditor.setValue('Input is empty');
       return;
     }
+    const TAB_WIDTH = ' '.repeat(10); // 10 spaces for each indentation level
 
     try {
-      this.sqlFormatterService.formatSQL(sqlInput).then((result: string) => {
-        this.outputValue = result;
-        this.outputAceEditor.setValue(this.outputValue);
-        this.outputAceEditor.session.setMode('ace/mode/sql');
-        this.outputAceEditor.session.clearAnnotations();
-      }).catch((error: any) => {
-        this.outputAceEditor.setValue(`Error: ${error.message}`);
-        this.outputAceEditor.session.setAnnotations([
-          {
-            row: 0,
-            column: 0,
-            text: error.message,
-            type: 'error',
-          },
-        ]);
+      // Step 1: Core formatting with sql-formatter
+      let formatted = format(sqlInput, {
+        language: 'tsql',
+        tabWidth: this.tabWidth,
+        useTabs: this.useTabs,
+        keywordCase: this.keywordCase,
+        dataTypeCase: this.dataTypeCase,
+        functionCase: this.functionCase,
+        identifierCase: this.identifierCase,
+        indentStyle: this.indentStyle,
+        logicalOperatorNewline: 'after',
+        expressionWidth: this.expressionWidth,
+        linesBetweenQueries: this.linesBetweenQueries
       });
-      // this.outputValue = sqlFormatter.format(sqlInput)
-      // this.outputValue = format(sqlInput, {
-      //   language: 'tsql',
-      //   tabWidth: this.tabSize,
-      //   useTabs: true,
-      //   keywordCase: this.uppercaseKeywords ? 'upper' : 'lower',
-      //   dataTypeCase: this.uppercaseKeywords ? 'upper' : 'lower',
-      //   functionCase: 'preserve',
-      //   identifierCase: 'preserve',
-      //   indentStyle: 'tabularLeft',
-      //   logicalOperatorNewline: 'after',
-      // });
-
-      // Set formatted SQL to output editor
-      this.outputAceEditor.setValue(this.outputValue);
+      
+      this.outputAceEditor.setValue(formatted);
       this.outputAceEditor.session.setMode('ace/mode/sql');
-
-      // Clear any previous error highlights
       this.outputAceEditor.session.clearAnnotations();
+
     } catch (error: any) {
       this.outputAceEditor.setValue(`Error: ${error.message}`);
-      // Add error highlighting
-      this.outputAceEditor.session.setAnnotations([
-        {
-          row: 0,
-          column: 0,
-          text: error.message,
-          type: 'error',
-        },
-      ]);
     }
+  }
+  resetOptions() {
+    this.tabWidth = 5;
+    this.useTabs = false;
+    this.keywordCase = 'preserve';
+    this.dataTypeCase = 'preserve';
+    this.functionCase = 'preserve';
+    this.identifierCase = 'preserve';
+    this.indentStyle = 'standard';
+    this.expressionWidth = 50;
+    this.linesBetweenQueries = 1;
+
+    // Trigger formatting with new options
+    this.onOptionChange();
+  }
+
+  onOptionChange() {
+    this.onSqlConvert();
   }
 
   downloadContent() {
@@ -237,16 +253,7 @@ export class SqlFormatterComponent implements OnDestroy, AfterViewInit {
       this.outputValue = '';
     }
   }
-  sampleData: string = `SELECT 
-      CompanyName,
-      AddressType,
-      AddressLine1
-FROM Customer
-    JOIN CustomerAddress
-        ON (Customer.CustomerID = CustomerAddress.CustomerID)
-    JOIN Address
-        ON (CustomerAddress.AddressID = Address.AddressID)
-WHERE CompanyName = 'ACME Corporation'`;
+  sampleData: string = `WITH CUSTOMERORDERS AS ( SELECT c.CustomerID, c.Name AS CustomerName, COUNT(o.OrderID) AS TotalOrders, MAX(o.OrderDate) AS LastOrderDate, SUM(o.TotalAmount) AS TotalSpent, AVG(o.TotalAmount) AS AvgOrderValue FROM Customers c LEFT JOIN Orders o ON c.CustomerID = o.CustomerID GROUP BY c.CustomerID, c.Name ), RankedCustomers AS ( SELECT CustomerID, CustomerName, TotalOrders, LastOrderDate, TotalSpent, AvgOrderValue, RANK() OVER ( ORDER BY TotalSpent DESC ) AS SpendingRank FROM CustomerOrders ) SELECT rc.CustomerID, rc.CustomerName, rc.TotalOrders, rc.LastOrderDate, rc.TotalSpent, rc.AvgOrderValue, rc.SpendingRank, CASE WHEN rc.TotalSpent > 10000 THEN 'VIP' WHEN rc.TotalSpent BETWEEN 5000 AND 10000 THEN 'Regular' ELSE 'New Customer' END AS CustomerCategory FROM RankedCustomers rc ORDER BY rc.SpendingRank;`;
   onSampleData() {
     this.inputValue = this.sampleData;
 
@@ -254,4 +261,5 @@ WHERE CompanyName = 'ACME Corporation'`;
       this.inputAceEditor.setValue(this.sampleData);
     }
   }
+
 }

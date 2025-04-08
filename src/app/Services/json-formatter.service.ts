@@ -7,7 +7,6 @@ import CryptoJS from 'crypto-js';
 export class JsonFormatterService {
   private key = '7061737323313233';
   private iv = '7061737323313233';
-
   constructor() { }
 
   // Repair input by removing unnecessary quotes
@@ -223,7 +222,7 @@ export class JsonFormatterService {
 }`;
   }
 
-  downloadContent(){
-    
+  downloadContent() {
+
   }
 }

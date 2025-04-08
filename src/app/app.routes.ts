@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 
 
-
 export const routes: Routes = [
   { path: '', redirectTo: 'jsonFormtter', pathMatch: 'full' },
 
@@ -14,10 +13,8 @@ export const routes: Routes = [
     loadComponent: () => import('./Components/sql-formatter/sql-formatter.component').then((m) => m.SqlFormatterComponent),
   },
   {
-    path: 'login', loadComponent: () => import('./Components/login/login.component').then((m) => m.LoginComponent)
-  },
-  {
-    path: 'JSON', loadComponent: () => import('./Components/json/json.component').then((m) => m.JSONComponent)
+    path: 'login', loadComponent: () => import('./Components/login/login.component').then((m) => m.LoginComponent),
+  
   },
   {
     path: '**', loadComponent: () => import('./Components/undefine/undefine.component').then((m) => m.UndefineComponent)

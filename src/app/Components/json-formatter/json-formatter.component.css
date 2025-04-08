@@ -5,6 +5,7 @@
 
 /* Input Box Css */
 .editor-container {
+  position: relative;
   height: 95%;
   width: 100%;
   border: 2px solid;
@@ -30,17 +31,23 @@
   border: 1px solid #444444;
   padding: 4px 8px;
   border-radius: 4px;
-  width: 100%;
   background-color: #ffffff;
   color: #154163;
+  height: 30px;
+  font-size: 15px
 }
 
 .search-controls {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 3px;
   background-color: transparent;
 }
+
+.search-container:focus-within .search-controls {
+  display: flex;
+}
+
 .search-input::placeholder {
   color: #154163;
 }
@@ -55,8 +62,138 @@
   font-size: 12px;
   color: #ffffff;
 }
+
 .search-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
+
+
+/* Middle Box - Main Container */
+
+.middle-box {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  /* Keeping your original gap */
+}
+
+
+
+/* Upper Area - Buttons for Format, Minify, Encode, Decode */
+
+.middle-box-upperarea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* Keeping original gap */
+}
+
+
+
+/* Lower Area - Encryption/Decryption Sections */
+
+.middle-box-lowerarea {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* Keeping original gap */
+}
+
+
+
+/* Middle Buttons - Main Style */
+
+.middle-button {
+  width: 100%;
+  border: 2px solid;
+  /* Keeping border without changing colors */
+
+  border-radius: 7px;
+  font-size: 20px;
+  /* Keeping your original size */
+
+  color: #234653;
+  /* Original button text color */
+
+  transition: all 0.3s;
+  background-color: transparent;
+  margin-bottom: 5px;
+}
+
+.middle-box-lowerarea.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  /* Add other styles as needed */
+}
+
+
+
+/* Button Hover Effect */
+
+.middle-button:hover {
+  background-color: #234653;
+  color: #ffffff;
+  border-color: #234653;
+  cursor: pointer;
+}
+
+
+
+/* Buttons Group in Lower Area */
+
+.btn {
+  display: flex;
+  gap: 20px;
+  /* Keeping original gap */
+}
+
+
+
+/* Text Span Style for Encryption/Decryption */
+
+p {
+  text-align: center;
+  font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #234653;
+}
+
+
+
+.operation-select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid #234653;
+  border-radius: 7px;
+  font-size: 16px;
+  color: #234653;
+  background-color: transparent;
+  transition: all 0.3s;
+}
+
+
+
+.operation-select:hover {
+  background-color: rgba(35, 70, 83, 0.1);
+  cursor: pointer;
+}
+
+
+
+.operation-select:focus {
+  outline: none;
+  border-color: #234653;
+}
+
+
+
+.btn {
+  display: flex;
+  gap: 20px;
+  /* Matches your original gap */
+
+  justify-content: center;
+  /* Optional: centers buttons */
+}

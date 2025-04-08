@@ -10,30 +10,28 @@
       <!-- right-div -->
       <span class="div2">
         <span (click)="onSampleData()" class="sample mainstyel">Sample</span>
-        <input
-          type="file"
-          #fileInput
-          (change)="onFileSelect($event)"
-          style="display: none"
-          accept=".sql"
-          multiple
-        />
-        <div class="group relative" (click)="fileInput.click()">
+        <input type="file"
+               #fileInput
+               (change)="onFileSelect($event)"
+               style="display: none"
+               accept=".sql"
+               multiple />
+        <span class="group relative" (click)="fileInput.click()">
           <fa-icon icon="folder"></fa-icon>
-          <span class="toolkit">OpenFile</span>
-        </div>
-        <div class="group relative" (click)="copyClipboard('input')">
+          <!--<span class="toolkit">OpenFile</span>-->
+        </span>
+        <span class="group relative" (click)="copyClipboard('input')">
           <fa-icon icon="copy"></fa-icon>
-          <span class="toolkit">Copy</span>
-        </div>
-        <div class="group relative" (click)="clearContent('input')">
+          <!--<span class="toolkit">Copy</span>-->
+        </span>
+        <span class="group relative" (click)="clearContent('input')">
           <fa-icon icon="trash"></fa-icon>
-          <span class="toolkit">Delete</span>
-        </div>
-        <div class="group relative" (click)="toggleFullScreen('left')">
+          <!--<span class="toolkit">Delete</span>-->
+        </span>
+        <span class="group relative" (click)="toggleFullScreen('left')">
           <fa-icon icon="expand"></fa-icon>
-          <span class="toolkit fullscreen-tooltip">FullScreen</span>
-        </div>
+          <!--<span class="toolkit fullscreen-tooltip">FullScreen</span>-->
+        </span>
       </span>
     </span>
 
@@ -44,7 +42,86 @@
 
   <!-- middle box -->
   <div class="middle-box">
-    <button class="middle-button" (click)="onSqlConvert()">Beautify</button>
+
+
+    <div class="options-panel">
+
+      <h3 style="color: #234653;">SQL Formatting Options</h3>
+
+      <div class="option-group">
+        <label>Tab width:</label>
+        <input type="number" [(ngModel)]="tabWidth" min="1" (change)="onOptionChange()">
+      </div>
+
+      <div class="option-group">
+        <label>
+          Use tabs:
+        </label>
+        <input type="checkbox" [(ngModel)]="useTabs" (change)="onOptionChange()">
+      </div>
+
+      <div class="option-group">
+        <label>Indentation style:</label>
+        <select [(ngModel)]="indentStyle" (change)="onOptionChange()">
+          <option value="standard">Standard</option>
+          <option value="tabularLeft">Tabular Left</option>
+          <option value="tabularRight">Tabular Right</option>
+        </select>
+      </div>
+
+      <div class="option-group">
+        <label>Keyword case:</label>
+        <select [(ngModel)]="keywordCase" (change)="onOptionChange()">
+          <option value="preserve">Preserve</option>
+          <option value="upper">Upper</option>
+          <option value="lower">Lower</option>
+        </select>
+      </div>
+
+      <div class="option-group">
+        <label>Data type case:</label>
+        <select [(ngModel)]="dataTypeCase" (change)="onOptionChange()">
+          <option value="preserve">Preserve</option>
+          <option value="upper">Upper</option>
+          <option value="lower">Lower</option>
+        </select>
+      </div>
+
+      <div class="option-group">
+        <label>Function case:</label>
+        <select [(ngModel)]="functionCase" (change)="onOptionChange()">
+          <option value="preserve">Preserve</option>
+          <option value="upper">Upper</option>
+          <option value="lower">Lower</option>
+        </select>
+      </div>
+
+      <div class="option-group">
+        <label>Identifier case:</label>
+        <select [(ngModel)]="identifierCase" (change)="onOptionChange()">
+          <option value="preserve">Preserve</option>
+          <option value="upper">Upper</option>
+          <option value="lower">Lower</option>
+        </select>
+      </div>
+
+
+
+      <div class="option-group">
+        <label>Expression width:</label>
+        <input type="number" [(ngModel)]="expressionWidth" min="10" (change)="onOptionChange()">
+      </div>
+
+      <div class="option-group">
+        <label>Lines between queries:</label>
+        <input type="number" [(ngModel)]="linesBetweenQueries" min="0" (change)="onOptionChange()">
+      </div>
+
+
+      <div>
+        <button class="middle-button-reset" (click)="resetOptions()">Reset</button>
+      </div>
+    </div>
   </div>
 
   <!-- rightbox -->
@@ -55,40 +132,27 @@
       <span class="div1"> </span>
 
       <span class="div2">
-        <div class="group relative" (click)="downloadContent()">
+        <span class="group relative" (click)="downloadContent()">
           <fa-icon icon="download"></fa-icon>
-          <span class="toolkit">Download</span>
-        </div>
-        <div class="group relative" (click)="copyClipboard('output')">
+          <!--<span class="toolkit">Download</span>-->
+        </span>
+        <span class="group relative" (click)="copyClipboard('output')">
           <fa-icon icon="copy"></fa-icon>
-          <span class="toolkit">Copy</span>
-        </div>
-        <div class="group relative" (click)="clearContent('output')">
+          <!--<span class="toolkit">Copy</span>-->
+        </span>
+        <span class="group relative" (click)="clearContent('output')">
           <fa-icon icon="trash"></fa-icon>
-          <span class="toolkit">Delete</span>
-        </div>
-        <div class="group relative" (click)="toggleFullScreen('right')">
+          <!--<span class="toolkit">Delete</span>-->
+        </span>
+        <span class="group relative" (click)="toggleFullScreen('right')">
           <fa-icon icon="expand"></fa-icon>
-          <span class="toolkit fullscreen-tooltip">FullScreen</span>
-        </div>
+          <!--<span class="toolkit fullscreen-tooltip">FullScreen</span>-->
+        </span>
       </span>
     </span>
 
     <!-- rightbox textarea -->
     <div #outputEditor class="editor" style="height: 95%; width: 100%"></div>
-    <!-- <iframe
-      src="https://www.dpriver.com/pp/sqlformat.htm"
-      width="100%"
-      height="600px"
-      frameborder="0"
-      allowfullscreen
-      #outputEditor
-    >
-    </iframe> -->
-    <!-- <div class="output-container">
-      <pre
-        class="sql-output"
-      ><code class="hljs sql" [innerHTML]="formattedOutput"></code></pre>
-    </div> -->
+    
   </div>
 </div>

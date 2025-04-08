@@ -1,3 +1,4 @@
+
 <app-header></app-header>
 <div class="main">
   <!-- leftbox -->
@@ -6,36 +7,36 @@
     <span class="header-bar">
       <!-- left-div -->
       <span class="div1">
-        <div class="group" (click)="onIcon1Json()">
+        <span class="group" (click)="onIcon1Json()">
           <fa-icon icon="bars-staggered"></fa-icon>
-          <span class="toolkit">FormatData</span>
-        </div>
-        <div class="group" (click)="onIcon2Json()">
+          <!--<span class="toolkit">FormatData</span>-->
+        </span>
+        <span class="group" (click)="onIcon2Json()">
           <fa-icon icon="bars"></fa-icon>
-          <span class="toolkit">CompactJson</span>
-        </div>
+          <!--<span class="toolkit">CompactJson</span>-->
+        </span>
       </span>
 
       <!-- right-div -->
       <span class="div2">
         <span (click)="onSampleData()" class="sample mainstyel">Sample</span>
         <input type="file" #fileInput (change)="onFileSelect($event)" style="display: none" accept=".json" multiple />
-        <div class="group" (click)="fileInput.click()">
+        <span class="group" (click)="fileInput.click()">
           <fa-icon icon="folder"></fa-icon>
-          <span class="toolkit">OpenFile</span>
-        </div>
-        <div class="group" (click)="copyClipboard(inputValue)">
+          <!--<span class="toolkit">OpenFile</span>-->
+        </span>
+        <span class="group" (click)="copyClipboard(inputValue)">
           <fa-icon icon="copy"></fa-icon>
-          <span class="toolkit">Copy</span>
-        </div>
-        <div class="group" (click)="clearContent('input')">
+          <!--<span class="toolkit">Copy</span>-->
+        </span>
+        <span class="group" (click)="clearContent('input')">
           <fa-icon icon="trash"></fa-icon>
-          <span class="toolkit">Delete</span>
-        </div>
-        <div class="group" (click)="toggleFullScreen('left')">
+          <!--<span class="toolkit">Delete</span>-->
+        </span>
+        <span class="group" (click)="toggleFullScreen('left')">
           <fa-icon icon="expand"></fa-icon>
-          <span class="toolkit fullscreen-tooltip">FullScreen</span>
-        </div>
+          <!--<span class="toolkit fullscreen-tooltip">FullScreen</span>-->
+        </span>
       </span>
     </span>
 
@@ -45,67 +46,107 @@
 
   <!-- middle box -->
   <div class="middle-box">
-    <button class="middle-button" (click)="onConvertJson()">
-      Format / Beautifier
-    </button>
-    <button class="middle-button" (click)="OnConvertMinify()">
-      Minify / Compact
-    </button>
-    <button class="middle-button" (click)="onEncoded()">Encode</button>
-    <button class="middle-button" (click)="onDecodeAndFormat()">Decode</button>
+    <div class="middle-box-upperarea">
+
+      <button class="middle-button" (click)="onConvertJson()">
+        Format / Beautifier
+      </button>
+      <button class="middle-button" (click)="OnConvertMinify()">
+        Minify / Compact
+      </button>
+      <button class="middle-button" (click)="onEncoded()">Encode</button>
+      <button class="middle-button" (click)="onDecodeAndFormat()">Decode</button>
+
+    </div>
+
+    <div class="middle-box-lowerarea" *ngIf="isLoggedIn" [class.disabled]="!isLoggedIn">
+      <div>
+        <select class="operation-select" [(ngModel)]="selectedLowerOperation" (change)="onLowerOperationChange()">
+          <option value="" disabled>Select Operation</option>
+          <option value="web">Web decryption and Encryption</option>
+          <option value="secure">Secure your data</option>
+          <option value="protect">Protect your information</option>
+          <option value="choose">Choose your operation</option>
+        </select>
+
+        <!-- Web Option -->
+        <div *ngIf="selectedLowerOperation === 'web'" class="btn">
+          <button class="middle-button" (click)="encrypt(inputValue)">Encrypt</button>
+          <button class="middle-button" (click)="decrypt(inputValue)">Decrypt</button>
+        </div>
+
+        <!-- Secure Option -->
+        <div *ngIf="selectedLowerOperation === 'secure'" class="btn">
+          <button class="middle-button" (click)="encrypt(inputValue)">Encrypt</button>
+          <!--<button class="middle-button" (click)="webDecrypt()">Decrypt</button>-->
+        </div>
+
+        <!-- Protect Option -->
+        <div *ngIf="selectedLowerOperation === 'protect'" class="btn">
+          <button class="middle-button" (click)="encrypt(inputValue)">Encrypt</button>
+          <!--<button class="middle-button" (click)="webDecrypt()">Decrypt</button>-->
+        </div>
+
+        <!-- Choose Option -->
+        <div *ngIf="selectedLowerOperation === 'choose'" class="btn">
+          <button class="middle-button" (click)="encrypt(inputValue)">Encrypt</button>
+          <!--<button class="middle-button" (click)="webDecrypt()">Decrypt</button>-->
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- rightbox -->
   <div class="right-box">
     <span class="header-bar">
       <span class="div1">
-        <div class="group tooltip-container" (click)="onIcon3Json()">
+        <span class="group tooltip-container" (click)="onIcon3Json()">
           <fa-icon icon="bars-staggered"></fa-icon>
-          <span class="toolkit">FormatData</span>
-        </div>
-        <div class="group" (click)="onIcon4Json()">
+          <!--<span class="toolkit">FormatData</span>-->
+        </span>
+        <span class="group" (click)="onIcon4Json()">
           <fa-icon icon="bars"></fa-icon>
-          <span class="toolkit">CompactJson</span>
-        </div>
-        <div class="group" (click)="onIcon5Json()">
+          <!--<span class="toolkit">CompactJson</span>-->
+        </span>
+        <span class="group" (click)="onIcon5Json()">
           <fa-icon icon="arrow-left"></fa-icon>
-          <span class="toolkit">CompactJson</span>
-        </div>
-      </span>
-      <div class="search-container">
-        <input type="text" class="search-input" [(ngModel)]="searchQuery" placeholder="Search..."
-          (input)="onSearch()" />
-        <div class="search-controls">
-          <button class="search-button" (click)="navigateSearch(false)" [disabled]="searchResults.length === 0">
-            <fa-icon [icon]="'chevron-up'"></fa-icon>
-          </button>
-          <div class="search-count">
-            {{ searchResults.length > 0 ? currentSearchIndex + 1 : 0 }}/{{
+          <!--<span class="toolkit">CompactJson</span>-->
+        </span>
+        <span class="search-container">
+          <input type="text" class="search-input" [(ngModel)]="searchQuery" placeholder="Search..."
+                 (input)="onSearch()" />
+          <span class="search-controls">
+            <button class="search-button" (click)="navigateSearch(false)" [disabled]="searchResults.length === 0">
+              <fa-icon [icon]="'chevron-up'"></fa-icon>
+            </button>
+            <span class="search-count">
+              {{ searchResults.length > 0 ? currentSearchIndex + 1 : 0 }}/{{
             searchResults.length
-            }}
-          </div>
-          <button class="search-button" (click)="navigateSearch(true)" [disabled]="searchResults.length === 0">
-            <fa-icon [icon]="'chevron-down'"></fa-icon>
-          </button>
-        </div>
-      </div>
+              }}
+            </span>
+            <button class="search-button" (click)="navigateSearch(true)" [disabled]="searchResults.length === 0">
+              <fa-icon [icon]="'chevron-down'"></fa-icon>
+            </button>
+          </span>
+        </span>
+      </span>
       <span class="div2">
-        <div class="group" (click)="downloadContent()">
+        <span class="group" (click)="downloadContent()">
           <fa-icon icon="download"></fa-icon>
-          <span class="toolkit">Download</span>
-        </div>
-        <div class="group" (click)="copyClipboard(outputValue)">
+          <!--<span class="toolkit">Download</span>-->
+        </span>
+        <span class="group" (click)="copyClipboard(outputValue)">
           <fa-icon icon="copy"></fa-icon>
-          <span class="toolkit">Copy</span>
-        </div>
-        <div class="group" (click)="clearContent('output')">
+          <!--<span class="toolkit">Copy</span>-->
+        </span>
+        <span class="group" (click)="clearContent('output')">
           <fa-icon icon="trash"></fa-icon>
-          <span class="toolkit">Delete</span>
-        </div>
-        <div class="group" (click)="toggleFullScreen('right')">
+          <!--<span class="toolkit">Delete</span>-->
+        </span>
+        <span class="group" (click)="toggleFullScreen('right')">
           <fa-icon icon="expand"></fa-icon>
-          <span class="toolkit fullscreen-tooltip">FullScreen</span>
-        </div>
+          <!--<span class="toolkit fullscreen-tooltip">FullScreen</span>-->
+        </span>
       </span>
     </span>
     <div class="output-container">

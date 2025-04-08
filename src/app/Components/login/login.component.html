@@ -8,7 +8,7 @@
       <div class="form-group">
         <label for="userId" class="form-label">User ID</label>
         <input type="text" id="userId" formControlName="userName" placeholder="Enter your User ID" class="form-control"
-          required />
+               required />
         <div *ngIf="userName?.invalid && (userName?.dirty || userName?.touched)" class="error">
           <div *ngIf="userName?.errors?.['required']">User ID is required</div>
           <div *ngIf="userName?.errors?.['minlength']">User ID must be at least 6 characters</div>
@@ -22,17 +22,18 @@
           <!-- Wrapper for input and icon -->
           <div class="input-wrapper">
             <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
-              placeholder="Enter your Password" class="form-control" required />
-            <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error">
-              <div *ngIf="password?.errors?.['required']">Password is required</div>
-              <div *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</div>
-            </div>
-            <!-- Icon inside input -->
+                   placeholder="Enter your Password" class="form-control" required />
             <span class="toggle-icon" (click)="togglePasswordVisibility()">
               <img *ngIf="showPassword" src="UnVisibility.svg" alt="Hide Password" class="icon" />
               <img *ngIf="!showPassword" src="Visibility.svg" alt="Show Password" class="icon" />
             </span>
           </div>
+          <!-- Move the error message outside input-wrapper -->
+          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="error">
+            <div *ngIf="password?.errors?.['required']">Password is required</div>
+            <div *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</div>
+          </div>
+
         </div>
 
       </div>

@@ -1,34 +1,29 @@
 import { Injectable } from '@angular/core';
-import * as prettier from 'prettier/standalone';
-import sqlPlugin from 'prettier-plugin-sql';
-
+import { format } from 'sql-formatter';
 @Injectable({
   providedIn: 'root',
 })
 export class SqlFormatterService {
+  format(sqlInput: string, arg1: { uppercaseKeywords: boolean; tabSize: number; indentStyle: string; indentSize: number; }) {
+    throw new Error('Method not implemented.');
+  }
   uppercaseKeywords: boolean = false;
 
-  constructor() {}
+  constructor() { }
 
   async formatSQL(sqlQuery: string): Promise<string> {
     try {
-      const formattedSQL = await prettier.format(sqlQuery, {
-        parser: 'sql',
-        plugins: [sqlPlugin],
-        sqlFormatOptions: {
-          language: 'sql', // Options: sql, mysql, postgresql
-          keywordCase: this.uppercaseKeywords ? 'upper' : 'lower', // Options: lowercase, uppercase
-          indentStyle: 'standard', // Options: standard, tabularLeft, tabularRight
-          logicalOperatorNewline: 'before', // Options: before, after
-          linesBetweenQueries: 2,
-          useTabs: true,
-        //   dataTypeCase: this.uppercaseKeywords ? 'upper' : 'lower',
-          functionCase: 'preserve',
-          identifierCase: 'preserve',
-          // indentStyle: 'tabularLeft',
-        //   indentStyle: 'tabularLeft',
-        //   logicalOperatorNewline: 'after',
-        },
+      const formattedSQL = await format(sqlQuery, {
+        language: 'sql',
+        keywordCase: this.uppercaseKeywords ? 'upper' : 'lower',
+        dataTypeCase: this.uppercaseKeywords ? 'upper' : 'lower',
+        functionCase: 'preserve',
+        identifierCase: 'preserve',
+        indentStyle: 'tabularLeft',
+        logicalOperatorNewline: 'after',
+        expressionWidth: 50,
+        linesBetweenQueries: 1,
+        denseOperators: false,
       });
       return formattedSQL;
     } catch (error) {

@@ -4,6 +4,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 html {
   overflow: hidden;
 }
@@ -23,12 +24,15 @@ html {
 .right-box {
   width: 100%;
 }
-.right-box .div1 {
-  width: 35%;
-}
-.right-box .div2 {
-  width: 35%;
-}
+
+  .right-box .div1 {
+    width: 35%;
+  }
+
+  .right-box .div2 {
+    width: 35%;
+  }
+
 .header-bar {
   height: 5%;
   display: flex;
@@ -39,12 +43,14 @@ html {
   padding: 0 8px;
   overflow: hidden;
 }
+
 .div1 {
   width: 50%;
   display: flex;
   gap: 15px;
   align-items: center;
 }
+
 .div2 {
   width: 50%;
   display: flex;
@@ -52,20 +58,22 @@ html {
   gap: 15px;
   align-items: center;
 }
-.div1:hover,
-.div2:hover {
-  cursor: pointer;
-}
+
+  .div1:hover,
+  .div2:hover {
+    cursor: pointer;
+  }
 
 /* Sample */
 .sample {
   padding: 4px 8px;
 }
-.sample:hover {
-  text-decoration: underline;
-  background-color: #234653;
-  border-radius: 4px;
-}
+
+  .sample:hover {
+    text-decoration: underline;
+    background-color: #234653;
+    border-radius: 4px;
+  }
 
 /* Hover Iocn */
 .group {
@@ -76,6 +84,7 @@ html {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .toolkit {
   visibility: hidden;
   opacity: 0;
@@ -85,9 +94,10 @@ html {
   border-radius: 4px;
   padding: 6px 12px;
   position: absolute;
-  z-index: 1000;
-  bottom: 125%;
-  left: 50%;
+/*  z-index: 1000;*/
+  top: 20px;
+/*  bottom: 125%;*/
+/*  left: 50%;*/
   transform: translateX(-50%);
   transition: opacity 0.3s;
   font-size: 12px;
@@ -96,31 +106,33 @@ html {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Tooltip arrow */
-.toolkit::after {
-  content: "sddsss";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #2c3e50 transparent transparent transparent;
-}
+  /* Tooltip arrow */
+/*  .toolkit::after {
+    content: "sddsss";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #2c3e50 transparent transparent transparent;
+  }*/
 /* Hover effects */
 .group:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
-.group:hover .toolkit {
-  visibility: visible;
-  opacity: 1;
-}
+
+  .group:hover .toolkit {
+    visibility: visible;
+    opacity: 1;
+  }
 /* Specific positioning for fullscreen tooltip */
 .fullscreen-tooltip {
   white-space: normal;
   width: 80px;
 }
+
 .mainstyel {
   font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -146,18 +158,19 @@ html {
   background-color: transparent;
 }
 
-.middle-button:hover {
-  background-color: #234653;
-  color: #ffffff;
-  border-color: #234653;
-  cursor: pointer;
-}
+  .middle-button:hover {
+    background-color: #234653;
+    color: #ffffff;
+    border-color: #234653;
+    cursor: pointer;
+  }
 
 /* Highlight Word in JSonFormatter */
 .ace_editor .search-highlight {
   position: absolute;
   background-color: #ffff0063;
 }
+
 .ace_editor .search-highlight-current {
   position: absolute;
   background-color: rgba(255, 0, 0, 0.281);
@@ -179,6 +192,7 @@ html {
     padding-top: 3%;
   }
 }
+
 @media (min-width: 1024px) {
   .main {
     flex-direction: row;
@@ -196,9 +210,8 @@ html {
   .left-box {
     width: 42%;
   }
+
   .right-box {
     width: 42%;
   }
 }
-
-

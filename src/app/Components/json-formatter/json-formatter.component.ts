@@ -9,6 +9,7 @@ import JSONEditor from 'jsoneditor';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCopy, faFolder, faTrash, faBarsStaggered, faBars, faExpand, faDownload, faChevronUp, faChevronDown, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { HeaderComponent } from "../header/header.component";
+import { AuthService } from '../../Services/auth.service';
 
 @Component({
   selector: 'app-json-formatter',
@@ -18,26 +19,26 @@ import { HeaderComponent } from "../header/header.component";
 })
 
 export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
-
-  // constructor
-  constructor(library: FaIconLibrary, private jsonService: JsonFormatterService) {
-    library.addIcons(faCopy, faFolder, faTrash, faBarsStaggered, faBars, faExpand, faDownload, faChevronUp, faChevronDown, faArrowLeft);
-  }
-
-  @ViewChild('editorContainer') editorContainer!: ElementRef;
-  @ViewChild('outputEditorContainer') outputEditorContainer!: ElementRef;
-
-
-  searchQuery: string = '';
-  searchResults: { row: number; startCol: number; endCol: number }[] = [];
-  currentSearchIndex: number = -1;
   private _inputValue: string = '';
   private _outputValue: string = '';
   private editor: JSONEditor | null = null;
   private outputEditor: JSONEditor | null = null;
   private markers: number[] = []; // Store Ace editor marker IDs
-
-
+  public isLoggedIn: boolean = false;
+ 
+  searchQuery: string = '';
+  searchResults: { row: number; startCol: number; endCol: number }[] = [];
+  currentSearchIndex: number = -1;
+  selectedLowerOperation: string = ''; // Initial value is empty string
+ 
+  @ViewChild('editorContainer') editorContainer!: ElementRef;
+  @ViewChild('outputEditorContainer') outputEditorContainer!: ElementRef;
+ 
+  // constructor
+  constructor(library: FaIconLibrary, private jsonService: JsonFormatterService, private authService: AuthService ) {
+    library.addIcons(faCopy, faFolder, faTrash, faBarsStaggered, faBars, faExpand, faDownload, faChevronUp, faChevronDown, faArrowLeft);
+  }
+ 
   // get input value methi
   get inputValue(): string {
     return this._inputValue;
@@ -59,7 +60,13 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
     if (this.outputEditor) this.outputEditor.setText(value);
     this.onSearch();
   }
-
+  ngOnInit() {
+    // Subscribe to login status changes
+    this.authService.isLoggedIn$.subscribe((status) => {
+      this.isLoggedIn = status;
+    });
+  }
+ 
   ngAfterViewInit() {
     // Input Editor (Left Box)
     if (this.editorContainer) {
@@ -87,7 +94,7 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
         }
       );
       this.outputEditor.setText(this.outputValue);
-
+ 
       this.outputEditor.aceEditor.getSession().on('change', () => {
         try {
           this._outputValue = this.outputEditor!.getText();
@@ -98,7 +105,7 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
       });
     }
   }
-
+ 
   ngOnDestroy() {
     if (this.editor) {
       this.editor.destroy();
@@ -107,23 +114,31 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
       this.outputEditor.destroy();
     }
   }
-
+ 
   onConvertJson() {
     this.outputValue = this.jsonService.formatJson(this.inputValue);
   }
-
+ 
   onDecodeAndFormat() {
     this.outputValue = this.jsonService.decodeAndFormat(this.inputValue);
   }
-
+ 
   OnConvertMinify() {
     this.outputValue = this.jsonService.minifyJson(this.inputValue);
   }
-
+ 
   onEncoded() {
     this.outputValue = this.jsonService.encode(this.inputValue);
   }
-
+ 
+  encrypt(value: string) {
+    this.outputValue = this.jsonService.encrypt(this.inputValue);
+  }
+ 
+  decrypt(value: string) {
+    this.outputValue = this.jsonService.decrypt(this.inputValue);
+  }
+ 
   onSampleData() {
     this.inputValue = this.jsonService.getSampleData();
     this.onDecodeAndFormat();
@@ -131,41 +146,61 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
   onIcon1Json() {
     this.inputValue = this.jsonService.formatJson(this.inputValue);
   }
-
+ 
   onIcon2Json() {
     this.inputValue = this.jsonService.minifyJson(this.inputValue);
   }
-
+ 
   onIcon3Json() {
     this.outputValue = this.jsonService.formatJson(this.outputValue);
   }
-
+ 
   onIcon4Json() {
     this.outputValue = this.jsonService.minifyJson(this.outputValue);
   }
   onIcon5Json() {
     this.inputValue = this.outputValue;
   }
-
+ 
+  onLowerOperationChange() {
+    console.log('Selected operation:', this.selectedLowerOperation); // Debug log
+    // Force change detection if needed (optional, see below)
+    // this.cdRef.detectChanges(); // Uncomment if using ChangeDetectorRef
+  }
+ 
+  secureAction() {
+    console.log('Secure Data clicked');
+    // Add your logic here
+  }
+ 
+  protectAction() {
+    console.log('Protect clicked');
+    // Add your logic here
+  }
+  chooseAction() {
+    console.log('Choose Action clicked');
+    // Add your logic here
+  }
+ 
   onSearch() {
     if (!this.outputEditor || !this.outputValue) return;
-
+ 
     const aceEditor = this.outputEditor.aceEditor;
     const session = aceEditor.getSession();
-
+ 
     // Clear previous markers
     this.markers.forEach((marker) => session.removeMarker(marker));
     this.markers = [];
     this.searchResults = [];
-
+ 
     if (!this.searchQuery.trim()) {
       aceEditor.renderer.updateFull(true);
       return;
     }
-
+ 
     const regex = new RegExp(this.searchQuery, 'gi');
     const lines = this.outputValue.split('\n');
-
+ 
     lines.forEach((line, row) => {
       let match;
       while ((match = regex.exec(line)) !== null) {
@@ -176,7 +211,7 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
         });
       }
     });
-
+ 
     // Apply markers
     this.searchResults.forEach((result, index) => {
       const range = new (window as any).ace.Range(
@@ -195,32 +230,32 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
       );
       this.markers.push(marker);
     });
-
+ 
     if (this.searchResults.length > 0) {
       this.currentSearchIndex = 0;
       this.highlightCurrentMatch();
     } else {
       this.currentSearchIndex = -1;
     }
-
+ 
     aceEditor.renderer.updateFull(true); // Force re-render
   }
-
+ 
   navigateSearch(next: boolean) {
     if (this.searchResults.length === 0 || !this.outputEditor) return;
-
+ 
     const aceEditor = this.outputEditor.aceEditor;
     const session = aceEditor.getSession();
-
+ 
     // Clear previous markers
     this.markers.forEach((marker) => session.removeMarker(marker));
     this.markers = [];
-
+ 
     this.currentSearchIndex = next
       ? (this.currentSearchIndex + 1) % this.searchResults.length
       : (this.currentSearchIndex - 1 + this.searchResults.length) %
       this.searchResults.length;
-
+ 
     // Re-apply markers
     this.searchResults.forEach((result, index) => {
       const range = new (window as any).ace.Range(
@@ -239,11 +274,11 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
       );
       this.markers.push(marker);
     });
-
+ 
     this.highlightCurrentMatch();
     aceEditor.renderer.updateFull(true);
   }
-
+ 
   private highlightCurrentMatch() {
     if (this.currentSearchIndex < 0 || !this.outputEditor) return;
     const result = this.searchResults[this.currentSearchIndex];
@@ -263,7 +298,7 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
     a.click();
     window.URL.revokeObjectURL(url);
   }
-
+ 
   async copyClipboard(text: string): Promise<void> {
     try {
       await navigator.clipboard.writeText(text || '');
@@ -272,10 +307,10 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
       this.outputValue = error.message;
     }
   }
-
+ 
   onFileSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
-
+ 
     if (input.files && input.files.length > 0) {
       Array.from(input.files).forEach((file) => {
         const reader = new FileReader();
@@ -292,11 +327,11 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
     }
     input.value = '';
   }
-
+ 
   toggleFullScreen(side: string) {
     const leftBox = document.querySelector('.left-box') as HTMLElement;
     const rightBox = document.querySelector('.right-box') as HTMLElement;
-
+ 
     if (document.fullscreenElement) {
       document.exitFullscreen().catch((err) => {
         console.error('Error exiting fullscreen:', err);
@@ -310,12 +345,12 @@ export class JsonFormatterComponent implements AfterViewInit, OnDestroy {
       }
     }
   }
-
+ 
   clearContent(target: 'input' | 'output' | 'both' = 'both') {
     if (target === 'input' || target === 'both') {
       this.inputValue = '';
     }
-
+ 
     if (target === 'output' || target === 'both') {
       this.outputValue = '';
       // Reset search-related states
